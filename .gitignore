@@ -77,5 +77,6 @@ metals.sbt
 /.lib/
 
 
+
 # environment variables
 apikey.txt
