@@ -7,7 +7,7 @@ class APIKeyProxyServlet extends ScalatraServlet {
 
   post("/") {
     val promptJson: String = request.body
-    val apiKey: String = Source.fromFile("apikey.txt").getLines.mkString
+    val apiKey: String = "Bearer " + sys.env.get("OpenAI_apikey").getOrElse("Apikey not received from environment variable.")
     val timeout: Int = 10000
 
     val r = requests.post(
