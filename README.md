@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # APIKeyProxy #
 
 ## Build & Run ##
@@ -22,7 +21,6 @@ For restart upon changing files:
 
 Using this software: Once the Jetty runner is running, send a POST request to http://localhost:8080/ containing JSON file with proper OpenAI-format, and wait for a moment to receive the answer.
 
-
 This requires that you have OpenAI Apikey in your environment variable, stored in "OpenAI_apikey". Include thea Bearer token (without the "Bearer", just the apikey).
 
 For example:
@@ -35,15 +33,9 @@ For example:
     "max_tokens": 200,
     "top_p": 1.0,
     "frequency_penalty": 0.52,
-    "presence_penalty": 0.5,
-    "stop": [
-        "11."
-    ]
-}```
-
+    "presence_penalty": 0.5
+}
+```
 
 Authors:
 Antti Halava (Bytecraft)
-=======
-# aalto-2022-proxy
->>>>>>> 9cae11927ba50f01ddfb0d2c212be61420f27417
