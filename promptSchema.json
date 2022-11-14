@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "model": {
+        "type": "string"
+      },
+      "prompt": {
+        "type": "string"
+      },
+      "max_tokens": {
+        "type": "integer"
+      },
+      "temperature": {
+        "type": "integer"
+      },
+      "top_p": {
+        "type": "integer"
+      },
+      "n": {
+        "type": "integer"
+      },
+      "stream": {
+        "type": "boolean"
+      },
+      "logprobs": {
+        "type": "null"
+      },
+      "stop": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "model",
+      "prompt",
+      "max_tokens",
+      "temperature",
+      "top_p",
+      "n",
+      "stream",
+      "logprobs",
+      "stop"
+    ]
+  }
