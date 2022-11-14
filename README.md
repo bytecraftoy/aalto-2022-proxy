@@ -21,6 +21,9 @@ For restart upon changing files:
 
 Using this software: Once the Jetty runner is running, send a POST request to http://localhost:8080/ containing JSON file with proper OpenAI-format, and wait for a moment to receive the answer.
 
+
+This requires that you have OpenAI Apikey in your environment variable, stored in "OpenAI_apikey". Include thea Bearer token (without the "Bearer", just the apikey).
+
 For example:
 
 ```

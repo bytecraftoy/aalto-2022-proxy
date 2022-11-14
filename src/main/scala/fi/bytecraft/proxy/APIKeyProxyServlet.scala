@@ -10,8 +10,6 @@ class APIKeyProxyServlet extends ScalatraServlet {
     val apiKey: String = "Bearer " + sys.env.get("OpenAI_apikey").getOrElse("Apikey not received from environment variable.")
     val timeout: Int = 10000
 
-    println("Apikey: " + sys.env.get("OpenAI_apikey"))
-
     val r = requests.post(
        "https://api.openai.com/v1/completions",
        data = promptJson,
