@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # APIKeyProxy #
 
 ## Build & Run ##
@@ -21,3 +22,6 @@ For restart upon changing files:
 
 Authors:
 Antti Halava (Bytecraft)
+=======
+# aalto-2022-proxy
+>>>>>>> 9cae11927ba50f01ddfb0d2c212be61420f27417
