@@ -26,6 +26,7 @@ jobs:
         with:
           name: proxy_docker_image
           path: /tmp/proxy_docker_image.tar
+          retention-days: 7
 
   deploy:
     environment: main
