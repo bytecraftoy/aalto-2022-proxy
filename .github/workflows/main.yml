@@ -29,10 +29,10 @@ jobs:
           retention-days: 7
 
   deploy:
-    environment: main
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     needs: build
-    runs-on: ubuntu-latest
+    environment: main
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -63,4 +63,4 @@ jobs:
           docker save aalto_2022_proxy:latest | ssh -C root@65.108.249.101 docker load
 
       - name: Start proxy service
-        run: ssh root@65.108.249.101 "systemctl start aalto_2022_proxy.service"
+        run: ssh root@65.108.249.101 "systemctl enable --now aalto_2022_proxy.service"
