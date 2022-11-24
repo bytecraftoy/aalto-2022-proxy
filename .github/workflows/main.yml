@@ -55,12 +55,9 @@ jobs:
       - name: Add host to known_hosts
         run: echo "|1|51Fg/gQzqNfhMkuBnxLBSWCrl+s=|TbUOHEmNxVDTGdkxvvlmlN761QM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMV0unNHDl5cqDEDYe5ADTCgXMZxr02k5M4mcI9gFPtlrUiDjlE0UTZ8ejgPWhILtK3iETzNb8FD53dMn6Ck/vQ=" >> ~/.ssh/known_hosts
 
-      - name: Stop proxy service
-        run: ssh root@65.108.249.101 "systemctl stop aalto_2022_proxy.service"
-
       - name: Push image to server
         run: |
           docker save aalto_2022_proxy:latest | ssh -C root@65.108.249.101 docker load
 
-      - name: Start proxy service
-        run: ssh root@65.108.249.101 "systemctl enable --now aalto_2022_proxy.service"
+      - name: Restart proxy service
+        run: ssh root@65.108.249.101 "systemctl enable aalto_2022_proxy.service && systemctl restart aalto_2022_proxy.service"
