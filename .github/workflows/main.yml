@@ -1,0 +1,63 @@
+name: ci
+
+on:
+  # Run on all branches
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          tags: aalto_2022_proxy:latest
+          outputs: type=docker,dest=/tmp/proxy_docker_image.tar
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: proxy_docker_image
+          path: /tmp/proxy_docker_image.tar
+          retention-days: 7
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    environment: main
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: proxy_docker_image
+          path: /tmp
+
+      - name: Load image
+        run: |
+          docker load --input /tmp/proxy_docker_image.tar
+
+      - name: Add SSH key
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: mkdir -p ~/.ssh && printf "%s" "$SSH_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+
+      - name: Add host to known_hosts
+        run: echo "|1|51Fg/gQzqNfhMkuBnxLBSWCrl+s=|TbUOHEmNxVDTGdkxvvlmlN761QM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMV0unNHDl5cqDEDYe5ADTCgXMZxr02k5M4mcI9gFPtlrUiDjlE0UTZ8ejgPWhILtK3iETzNb8FD53dMn6Ck/vQ=" >> ~/.ssh/known_hosts
+
+      - name: Push image to server
+        run: |
+          docker save aalto_2022_proxy:latest | ssh -C root@65.108.249.101 docker load
+
+      - name: Restart proxy service
+        run: ssh root@65.108.249.101 "systemctl enable aalto_2022_proxy.service && systemctl restart aalto_2022_proxy.service"

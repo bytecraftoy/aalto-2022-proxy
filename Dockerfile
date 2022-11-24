@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM docker.io/openjdk:8
 
 ENV SBT_VERSION 1.7.2
 
