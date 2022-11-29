@@ -12,10 +12,9 @@ ENV SBT_VERSION 1.7.2
 RUN curl -L -o sbt-$SBT_VERSION.zip https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.zip && \
     unzip sbt-${SBT_VERSION}.zip -d /ops
 
-ENV WORKDIR /apikeyproxy
-WORKDIR ${WORKDIR}
+WORKDIR /tmp/apikeyproxy
 
-COPY . ${WORKDIR}
+COPY . /tmp/apikeyproxy
 
 RUN /ops/sbt/bin/sbt clean assembly
 
@@ -29,7 +28,7 @@ USER proxy:proxy
 ENV WORKDIR /apikeyproxy
 WORKDIR ${WORKDIR}
 
-COPY --from=build --chown=proxy:proxy ${WORKDIR}/apikeyproxy.jar ${WORKDIR}
+COPY --from=build --chown=proxy:proxy /tmp/apikeyproxy/apikeyproxy.jar ${WORKDIR}
 
 EXPOSE 8080
 
