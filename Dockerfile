@@ -1,19 +1,35 @@
-FROM docker.io/eclipse-temurin:17-jammy
-
-ENV SBT_VERSION 1.7.2
+#
+# BUILD STAGE
+#
+FROM docker.io/eclipse-temurin:17-jammy as build
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y unzip=6.0-26ubuntu3.1 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -L -o sbt-$SBT_VERSION.zip https://github.com/sbt/sbt/releases/download/v1.7.2/sbt-$SBT_VERSION.zip && \
-    unzip sbt-$SBT_VERSION.zip -d ops
+ENV SBT_VERSION 1.7.2
+RUN curl -L -o sbt-$SBT_VERSION.zip https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.zip && \
+    unzip sbt-${SBT_VERSION}.zip -d /ops
 
-WORKDIR /apikeyproxy
+WORKDIR /tmp/apikeyproxy
 
-COPY . /apikeyproxy
+COPY . /tmp/apikeyproxy
+
+RUN /ops/sbt/bin/sbt clean assembly
+
+#
+# DEPLOY STAGE
+#
+FROM docker.io/eclipse-temurin:17-jre-jammy
+
+USER proxy:proxy
+
+ENV WORKDIR /apikeyproxy
+WORKDIR ${WORKDIR}
+
+COPY --from=build --chown=proxy:proxy /tmp/apikeyproxy/apikeyproxy.jar ${WORKDIR}
 
 EXPOSE 8080
 
-CMD ["/ops/sbt/bin/sbt", "jetty:start", "jetty:join"]
+CMD ["java", "-jar", "apikeyproxy.jar"]

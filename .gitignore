@@ -80,3 +80,6 @@ metals.sbt
 
 # environment variables
 apikey.txt
+
+# sbt-assembly build files
+apikeyproxy.jar
