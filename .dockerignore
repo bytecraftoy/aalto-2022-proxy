@@ -3,3 +3,6 @@
 .git
 .github
 Dockerfile
+
+# our project files
+aalto-proxy
