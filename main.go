@@ -82,7 +82,7 @@ func post(c *gin.Context) {
 			Str("response_body", resString).
 			Int("status", res.StatusCode).
 			Float64("upstream_response_time", duration).
-			Msg("upstream_status")
+			Msg("upstream_bad_status")
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
