@@ -1,35 +1,29 @@
-#
-# BUILD STAGE
-#
-FROM docker.io/eclipse-temurin:17-jammy as build
+# Based on the official Go project example
+# https://docs.docker.com/language/golang/build-images/#multi-stage-builds
 
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y unzip=6.0-26ubuntu3.1 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+## Build
+FROM docker.io/golang:1.19-bullseye AS build
 
-ENV SBT_VERSION 1.7.2
-RUN curl -L -o sbt-$SBT_VERSION.zip https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.zip && \
-    unzip sbt-${SBT_VERSION}.zip -d /ops
+WORKDIR /app
 
-WORKDIR /tmp/apikeyproxy
+COPY go.mod go.sum ./
+RUN go mod download
 
-COPY . /tmp/apikeyproxy
+COPY *.go ./
 
-RUN /ops/sbt/bin/sbt clean assembly
+RUN go build -o /apikeyproxy
 
-#
-# DEPLOY STAGE
-#
-FROM docker.io/eclipse-temurin:17-jre-jammy
+## Deploy
+FROM docker.io/debian:bullseye-slim
 
-USER proxy:proxy
+COPY --from=build /apikeyproxy /apikeyproxy
 
-ENV WORKDIR /apikeyproxy
-WORKDIR ${WORKDIR}
+RUN useradd --user-group --home /app app
 
-COPY --from=build --chown=proxy:proxy /tmp/apikeyproxy/apikeyproxy.jar ${WORKDIR}
+USER app:app
+
+WORKDIR /app
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "apikeyproxy.jar"]
+ENTRYPOINT ["/apikeyproxy"]
