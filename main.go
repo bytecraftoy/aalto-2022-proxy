@@ -106,7 +106,7 @@ func main() {
 		log.Fatal().Msg("OpenAI_apikey ENV variable not found")
 		os.Exit(1)
 	}
-	apikey = key
+	apikey = fmt.Sprintf("Bearer %s", key)
 
 	router := gin.New()
 	router.Use(gin.Recovery())
