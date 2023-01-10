@@ -85,13 +85,13 @@ func post(c *gin.Context) {
 			Msg("upstream_status")
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
-	} else {
-		log.Info().
-			Str("response_body", resString).
-			Int("status", res.StatusCode).
-			Float64("upstream_response_time", duration).
-			Msg("upstream_response")
 	}
+
+	log.Info().
+		Str("response_body", resString).
+		Int("status", res.StatusCode).
+		Float64("upstream_response_time", duration).
+		Msg("upstream_response")
 
 	c.String(http.StatusOK, resString)
 }
