@@ -1,12 +1,8 @@
 # general project files
-.bloop
-.bsp
 .dockerignore
 .git
 .github
-.metals
 Dockerfile
-target
 
 # our project files
-apikeyproxy.jar
+aalto-proxy
