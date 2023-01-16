@@ -16,6 +16,11 @@ RUN go build -o /apikeyproxy
 ## Deploy
 FROM docker.io/debian:bullseye-slim
 
+RUN apt-get update \
+    && apt-get -y --no-install-recommends install ca-certificates \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /apikeyproxy /apikeyproxy
 
 RUN useradd --user-group --home /app app
