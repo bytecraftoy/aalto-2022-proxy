@@ -114,7 +114,7 @@ func main() {
 
 	router.POST("/", post)
 
-	const url = "localhost"
+	const url = "0.0.0.0"
 	const port = 8080
 	log.Info().Int16("port", port).Str("url", url).Msg("start")
 	router.Run(fmt.Sprintf("%s:%d", url, port))
