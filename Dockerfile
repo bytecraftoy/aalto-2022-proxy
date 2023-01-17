@@ -29,6 +29,8 @@ USER app:app
 
 WORKDIR /app
 
+ENV GIN_MODE=release
+
 EXPOSE 8080
 
 ENTRYPOINT ["/apikeyproxy"]
