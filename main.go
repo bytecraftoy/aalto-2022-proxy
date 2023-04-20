@@ -41,7 +41,7 @@ func post(c *gin.Context) {
 	log.Info().Bytes("request_body", body).Msg("request_body")
 
 	client := &http.Client{
-		Timeout: 10 * time.Second,
+		Timeout: 30 * time.Second,
 	}
 
 	req, err := http.NewRequest("POST", "https://api.openai.com/v1/completions", bytes.NewBuffer(body))
