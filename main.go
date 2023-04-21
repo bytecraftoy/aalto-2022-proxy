@@ -16,7 +16,7 @@ import (
 
 var apikey string
 
-func post(c *gin.Context) {
+func proxyRequest(url string, c *gin.Context) {
 	headers, err := json.Marshal(c.Request.Header)
 	if err != nil {
 		return
@@ -44,7 +44,7 @@ func post(c *gin.Context) {
 		Timeout: 30 * time.Second,
 	}
 
-	req, err := http.NewRequest("POST", "https://api.openai.com/v1/completions", bytes.NewBuffer(body))
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		log.Error().Err(err).Msg("upstream_request_prepare_fail")
 		c.AbortWithStatus(http.StatusInternalServerError)
@@ -96,6 +96,14 @@ func post(c *gin.Context) {
 	c.String(http.StatusOK, resString)
 }
 
+func postChat(c *gin.Context) {
+	proxyRequest("https://api.openai.com/v1/chat/completions", c)
+}
+
+func postCompletion(c *gin.Context) {
+	proxyRequest("https://api.openai.com/v1/completions", c)
+}
+
 func main() {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	logger := zerolog.New(os.Stdout)
@@ -112,7 +120,8 @@ func main() {
 	router.Use(gin.Recovery())
 	router.SetTrustedProxies(nil)
 
-	router.POST("/", post)
+	router.POST("/", postCompletion)
+	router.POST("/chat", postChat)
 
 	const url = "0.0.0.0"
 	const port = 8080
